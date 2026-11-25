@@ -143,7 +143,10 @@
       const list = navigator.getGamepads();
       const active = [];
       for (let i = 0; i < list.length; i++) {
-        if (list[i] && list[i].connected) active.push(list[i]);
+        const gp = list[i];
+        if (gp && gp.connected !== false && gp.buttons && gp.buttons.length >= 8) {
+          active.push(gp);
+        }
       }
       return active;
     }
