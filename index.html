@@ -3,918 +3,532 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Street Fighter II Turbo — Arcade Cabinet</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c101b'/%3E%3Cpath d='M12 44 L26 16 L52 16 L38 30 L50 30 L20 52 L28 34 L12 34 Z' fill='%23f59e0b'/%3E%3C/svg%3E">
+  <title>Street Fighter II Turbo</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305070c'/%3E%3Cpath d='M12 44 L26 16 L52 16 L38 30 L50 30 L20 52 L28 34 L12 34 Z' fill='%23f59e0b'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #080b12;
-      --bg-panel: rgba(16, 21, 33, 0.92);
-      --bg-inset: rgba(7, 10, 17, 0.65);
-      --border: rgba(255, 255, 255, 0.09);
-      --border-strong: rgba(255, 255, 255, 0.16);
+      --bg: #000000;
       --gold: #fbbf24;
-      --gold-dim: rgba(251, 191, 36, 0.15);
       --red: #ef4444;
-      --red-dim: rgba(239, 68, 68, 0.16);
-      --blue: #38bdf8;
-      --blue-dim: rgba(56, 189, 248, 0.15);
       --xbox: #10b981;
-      --xbox-dim: rgba(16, 185, 129, 0.16);
       --text: #f8fafc;
       --muted: #94a3b8;
-      --dim: #64748b;
+      --surface: rgba(12, 16, 26, 0.94);
+      --border: rgba(255, 255, 255, 0.14);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      background-color: var(--bg);
-      background-image:
-        radial-gradient(ellipse at 20% 0%, rgba(239, 68, 68, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 0%, rgba(251, 191, 36, 0.09) 0%, transparent 50%),
-        linear-gradient(180deg, #080b12 0%, #0d121e 100%);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* Header */
-    header {
-      height: 60px;
-      padding: 0 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: rgba(8, 11, 18, 0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-emblem {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
-      display: grid;
-      place-items: center;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 11px;
-      color: #fff;
-      box-shadow: 0 0 18px rgba(239, 68, 68, 0.35);
-      flex-shrink: 0;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .brand-title {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 11px;
-      letter-spacing: 0.3px;
-      background: linear-gradient(90deg, #fde047 0%, #f59e0b 55%, #ef4444 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .brand-sub {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .pill-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid var(--border-strong);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .pill-status.online {
-      border-color: rgba(16, 185, 129, 0.45);
-      color: #a7f3d0;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #475569;
-    }
-
-    .pill-status.online .dot {
-      background: var(--xbox);
-      box-shadow: 0 0 9px rgba(16, 185, 129, 0.9);
-    }
-
-    .btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-strong);
-      color: #e2e8f0;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.16s ease;
-    }
-
-    .btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-
-    .btn.active {
-      background: var(--gold-dim);
-      border-color: rgba(251, 191, 36, 0.5);
-      color: var(--gold);
-    }
-
-    /* Main Grid */
-    main {
-      width: 100%;
-      max-width: 1420px;
-      margin: 0 auto;
-      padding: 20px 22px 32px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 360px;
-      gap: 22px;
-      align-items: start;
-    }
-
-    @media (max-width: 1040px) {
-      main { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      header { padding: 0 12px; height: auto; min-height: 56px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
-      main { padding: 12px; gap: 14px; }
-      .brand-title { font-size: 9px; }
-      .brand-sub { display: none; }
-    }
-
-    /* Cabinet Stage */
-    .stage {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .cabinet {
-      background: linear-gradient(180deg, #171d2b 0%, #0e121c 100%);
-      border: 1px solid var(--border-strong);
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    }
-
-    .marquee {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-      padding: 0 4px;
-      flex-wrap: wrap;
-    }
-
-    .marquee-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .badge-turbo {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 9px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, #dc2626, #f59e0b);
-      color: #fff;
-      letter-spacing: 0.4px;
-    }
-
-    .marquee-name {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 10px;
-      color: #fff;
-    }
-
-    .marquee-meta {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--dim);
-    }
-
-    .viewport-box {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-      border: 2px solid #242d40;
-      box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.9);
-    }
-
-    .viewport-box:fullscreen {
-      border-radius: 0;
-      border: none;
-      aspect-ratio: auto;
-    }
-
-    #game-container, #game {
+    html, body {
       width: 100%;
       height: 100%;
-      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
+    /* Full-Bleed Arcade Stage (fills 100% of screen automatically) */
+    #arcade-root {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #game-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    #game {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Hide EmulatorJS PC chrome / bottom bar / virtual touch clutter so it never traps console/Xbox users */
+    .ejs_menu_bar,
+    .ejs_menu_bar_hidden,
+    .ejs_virtualGamepad_parent,
+    .ejs_context_menu,
+    .ejs_cheats_box,
+    .ejs_netplay_box {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    /* Optional CRT scanlines */
     .crt-overlay {
-      position: absolute;
+      position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 10;
       background:
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.025), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.025));
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
       background-size: 100% 4px, 6px 100%;
-      opacity: 0.78;
+      opacity: 0.72;
       transition: opacity 0.2s ease;
     }
 
     .crt-overlay.disabled { opacity: 0; }
 
-    .telemetry {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-      padding: 8px 12px;
-      border-radius: 9px;
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .telemetry strong { color: var(--gold); font-weight: 700; }
-
-    /* Move List Deck */
-    .panel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
-    }
-
-    .panel-head {
+    /* Minimal Auto-Hiding HUD Bar (fades completely out during play) */
+    .hud-float {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 30;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
     }
 
-    .panel-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
+    .hud-float.faded {
+      opacity: 0;
+    }
+
+    .hud-pill {
+      pointer-events: auto;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(8, 11, 18, 0.78);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 4px 10px;
+      color: var(--text);
+      letter-spacing: 0.2px;
+    }
+
+    .hud-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #475569;
+    }
+
+    .hud-pill.online .hud-dot {
+      background: var(--xbox);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.9);
+    }
+
+    .hud-hint {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .hud-btn-group {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .hud-btn {
+      background: rgba(8, 11, 18, 0.78);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
       border-radius: 999px;
       cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
 
-    .tab-btn.active {
-      background: var(--gold-dim);
-      border-color: rgba(251, 191, 36, 0.5);
+    .hud-btn:hover, .hud-btn:focus-visible {
+      background: rgba(251, 191, 36, 0.2);
+      border-color: var(--gold);
+      outline: none;
+    }
+
+    /* Fullscreen Splash Overlay (One-click or Press A to unlock audio + fullscreen) */
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(220, 38, 38, 0.24) 0%, rgba(5, 7, 12, 0.92) 62%),
+        rgba(5, 7, 12, 0.92);
+      backdrop-filter: blur(6px);
+      transition: opacity 0.25s ease;
+    }
+
+    #splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .splash-badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .splash-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(20px, 4vw, 38px);
+      line-height: 1.35;
+      background: linear-gradient(180deg, #fef08a 0%, #f59e0b 55%, #dc2626 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 6px 24px rgba(220, 38, 38, 0.35));
+    }
+
+    .splash-sub {
+      font-size: clamp(13px, 1.6vw, 16px);
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .splash-play-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(12px, 1.8vw, 15px);
+      padding: 18px 34px;
+      border-radius: 14px;
+      border: 2px solid var(--gold);
+      background: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 32px rgba(245, 158, 11, 0.45);
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .splash-play-btn:hover, .splash-play-btn:focus-visible {
+      transform: scale(1.04);
+      box-shadow: 0 0 44px rgba(251, 191, 36, 0.7);
+      outline: none;
+    }
+
+    .splash-pad-status {
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .splash-pad-status.online {
+      border-color: rgba(16, 185, 129, 0.55);
+      color: #a7f3d0;
+    }
+
+    .splash-controls-hint {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #64748b;
+      max-width: 520px;
+      line-height: 1.55;
+    }
+
+    /* Xbox-Controller-Navigable Quick Menu Overlay */
+    #quick-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(10px);
+    }
+
+    #quick-menu.open {
+      display: flex;
+    }
+
+    .menu-card {
+      width: 100%;
+      max-width: 460px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8);
+    }
+
+    .menu-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
       color: var(--gold);
     }
 
-    .moves-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
-      gap: 10px;
+    .menu-pad-info {
+      font-size: 12px;
+      color: #a7f3d0;
     }
 
-    .fighter-card {
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 11px 12px;
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
     }
 
-    .fighter-head {
+    .menu-item {
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 7px;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid transparent;
+      color: #e2e8f0;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.1s ease;
     }
 
-    .fighter-name {
+    .menu-item .val {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .menu-item.selected,
+    .menu-item:hover {
+      background: rgba(251, 191, 36, 0.16);
+      border-color: var(--gold);
+      color: #fff;
+      transform: translateX(3px);
+    }
+
+    .menu-item.selected .val {
+      color: var(--gold);
+    }
+
+    .menu-footer {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Compact Move List Sub-View inside Quick Menu */
+    #moves-view {
+      display: none;
+    }
+
+    #moves-view.active {
+      display: block;
+    }
+
+    .moves-scroll {
+      max-height: 58dvh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .mv-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .mv-name {
       font-family: 'Press Start 2P', monospace;
       font-size: 9px;
       color: var(--gold);
-    }
-
-    .fighter-origin {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      color: var(--dim);
-    }
-
-    .move-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 0;
-      border-top: 1px dashed rgba(255, 255, 255, 0.06);
-      font-size: 11px;
-    }
-
-    .move-name { color: #e2e8f0; }
-
-    .move-cmd {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--blue);
-      background: var(--blue-dim);
-      padding: 2px 6px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    /* Sidebar: Xbox Controllers */
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .player-slot {
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-      transition: border-color 0.2s ease;
-    }
-
-    .player-slot:last-of-type { margin-bottom: 0; }
-
-    .player-slot.connected {
-      border-color: rgba(16, 185, 129, 0.45);
-      background: rgba(16, 185, 129, 0.06);
-    }
-
-    .slot-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
       margin-bottom: 6px;
     }
 
-    .slot-tag {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 9px;
-      padding: 3px 7px;
-      border-radius: 4px;
-    }
-
-    .slot-tag.p1 { background: var(--red-dim); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
-    .slot-tag.p2 { background: var(--blue-dim); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.35); }
-
-    .slot-state {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--dim);
-    }
-
-    .player-slot.connected .slot-state { color: #6ee7b7; }
-
-    .slot-name {
-      font-size: 12px;
-      color: var(--muted);
+    .mv-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 8px;
-    }
-
-    .rumble-btn {
-      background: rgba(16, 185, 129, 0.14);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #a7f3d0;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .rumble-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    .slot-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .slot-actions .btn {
-      flex: 1;
-      justify-content: center;
-      font-size: 11px;
-    }
-
-    /* Layout Toggle */
-    .layout-switch {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .layout-opt {
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 9px 10px;
-      color: var(--muted);
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.16s ease;
-    }
-
-    .layout-opt strong {
-      display: block;
       font-size: 12px;
+      padding: 2px 0;
       color: #e2e8f0;
-      margin-bottom: 2px;
     }
 
-    .layout-opt span {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      color: var(--dim);
-    }
-
-    .layout-opt.active {
-      background: var(--xbox-dim);
-      border-color: rgba(16, 185, 129, 0.55);
-    }
-
-    .layout-opt.active strong { color: #a7f3d0; }
-
-    /* Live Xbox Input Map */
-    .dpad-row {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .chip {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      padding: 4px 8px;
-      border-radius: 5px;
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      color: var(--dim);
-      transition: all 0.08s ease;
-    }
-
-    .chip.lit-p1 {
-      background: var(--red-dim);
-      border-color: var(--red);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-    }
-
-    .chip.lit-p2 {
-      background: var(--blue-dim);
-      border-color: var(--blue);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-    }
-
-    .six-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
-      margin-bottom: 10px;
-    }
-
-    .pad-btn {
-      background: var(--bg-inset);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 8px 6px;
-      text-align: center;
-      transition: all 0.08s ease;
-    }
-
-    .pad-btn .xbox-cap {
-      display: inline-block;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 9px;
-      padding: 3px 6px;
-      border-radius: 5px;
-      margin-bottom: 4px;
-    }
-
-    .pad-btn.punch .xbox-cap { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-    .pad-btn.kick .xbox-cap { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; }
-
-    .pad-btn .move-cap {
-      display: block;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .pad-btn.lit-p1 {
-      border-color: var(--red);
-      background: rgba(239, 68, 68, 0.24);
-      box-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
-      transform: scale(0.97);
-    }
-
-    .pad-btn.lit-p2 {
-      border-color: var(--blue);
-      background: rgba(56, 189, 248, 0.24);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
-      transform: scale(0.97);
-    }
-
-    .deadzone-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .deadzone-row input[type="range"] {
-      flex: 1;
-      accent-color: var(--xbox);
-    }
-
-    .kb-list {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      line-height: 1.75;
-      color: var(--muted);
-    }
-
-    .kb-list strong { color: #fff; }
-
-    .tip-note {
-      font-size: 11px;
-      color: var(--dim);
-      line-height: 1.45;
-      margin-top: 8px;
+    .mv-cmd {
+      color: #7dd3fc;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <div class="brand-emblem">SF2</div>
-      <div class="brand-text">
-        <div class="brand-title">STREET FIGHTER II TURBO</div>
-        <div class="brand-sub">HYPER FIGHTING · SNES9X WASM · DUAL XBOX CONTROLLER ARCADE</div>
+  <div id="arcade-root">
+    <div id="game-wrap">
+      <div id="game"></div>
+    </div>
+    <div class="crt-overlay" id="crt-overlay"></div>
+
+    <!-- Auto-hiding minimal corner bar (fades completely out during gameplay) -->
+    <div class="hud-float" id="hud-float">
+      <div class="hud-pill" id="hud-pad-pill">
+        <span class="hud-dot"></span>
+        <span id="hud-pad-text">Xbox Controller Ready</span>
+        <span class="hud-hint">· Hold BACK + START for Menu</span>
+      </div>
+      <div class="hud-btn-group">
+        <button class="hud-btn" id="btn-hud-fs" type="button">Fullscreen</button>
+        <button class="hud-btn" id="btn-hud-menu" type="button">Menu</button>
       </div>
     </div>
 
-    <div class="header-actions">
-      <div class="pill-status" id="header-xbox-pill">
-        <span class="dot"></span>
-        <span id="header-xbox-text">XBOX: PRESS ANY BUTTON</span>
+    <!-- One-Press Launch Splash (Click or Press A / Start on Xbox 360) -->
+    <div id="splash">
+      <div class="splash-badge">CAPCOM 1993 · HYPER FIGHTING</div>
+      <h1 class="splash-title">STREET FIGHTER II<br>TURBO</h1>
+      <p class="splash-sub">Full-Screen Xbox Arcade Edition</p>
+      <button class="splash-play-btn" id="btn-start-play" type="button">PRESS A / CLICK TO PLAY</button>
+      <div class="splash-pad-status" id="splash-pad-status">
+        <span class="hud-dot"></span>
+        <span id="splash-pad-text">Press any button on your Xbox controller…</span>
       </div>
-      <button class="btn active" id="btn-crt" type="button">CRT</button>
-      <button class="btn" id="btn-fullscreen" type="button">Fullscreen</button>
+      <p class="splash-controls-hint">
+        Punches: <strong>X · Y · RB</strong> &nbsp;|&nbsp; Kicks: <strong>A · B · RT</strong> &nbsp;|&nbsp; Move: <strong>D-Pad or Left Stick</strong><br>
+        Hold <strong>BACK + START</strong> (or click <strong>L3 + R3</strong>) anytime for Fullscreen, Layout, Move List &amp; Reset
+      </p>
     </div>
-  </header>
 
-  <main>
-    <!-- Left: Arcade Cabinet + World Warrior Move List -->
-    <section class="stage">
-      <div class="cabinet">
-        <div class="marquee">
-          <div class="marquee-left">
-            <span class="badge-turbo">TURBO</span>
-            <span class="marquee-name">STREET FIGHTER II TURBO: HYPER FIGHTING</span>
-          </div>
-          <span class="marquee-meta">CAPCOM 1993 · 20 MBIT SNES</span>
+    <!-- Xbox-Navigable Quick Menu -->
+    <div id="quick-menu" role="dialog" aria-modal="true" aria-label="Arcade Quick Menu">
+      <div class="menu-card">
+        <div class="menu-head">
+          <span class="menu-title" id="menu-title">ARCADE MENU</span>
+          <span class="menu-pad-info" id="menu-pad-info">P1 Ready</span>
         </div>
 
-        <div class="viewport-box" id="viewport-box">
-          <div class="crt-overlay" id="crt-overlay"></div>
-          <div id="game-container">
-            <div id="game"></div>
-          </div>
-        </div>
-
-        <div class="telemetry">
-          <span>CORE: <strong>SNES9X WASM</strong></span>
-          <span>PLAYERS: <strong id="tele-players">1P / 2P READY</strong></span>
-          <span>LAYOUT: <strong id="tele-layout">XBOX 6-BUTTON</strong></span>
-          <span>STICK + D-PAD: <strong>ACTIVE</strong></span>
-        </div>
-      </div>
-
-      <!-- Full 12-Fighter Move List -->
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title">World Warrior Special Moves (Turbo Edition)</div>
-          <div class="filter-tabs" id="roster-tabs">
-            <button class="tab-btn active" data-filter="all" type="button">All 12</button>
-            <button class="tab-btn" data-filter="classics" type="button">Original 8</button>
-            <button class="tab-btn" data-filter="bosses" type="button">Four Bosses</button>
-          </div>
-        </div>
-        <div class="moves-grid" id="moves-grid"></div>
-      </div>
-    </section>
-
-    <!-- Right: Xbox Controller Dock + Live Input HUD + Keyboard -->
-    <aside class="sidebar">
-      <!-- Dual Xbox Controller Status -->
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title">Xbox Controllers (1P &amp; 2P)</div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--xbox);">USB / BLUETOOTH</span>
-        </div>
-
-        <div class="player-slot" id="slot-p1">
-          <div class="slot-top">
-            <span class="slot-tag p1">PLAYER 1</span>
-            <span class="slot-state" id="p1-state">WAITING…</span>
-          </div>
-          <div class="slot-name">
-            <span id="p1-name">Press any button on Xbox pad</span>
-            <button class="rumble-btn" id="btn-rumble-p1" type="button" disabled>Rumble</button>
-          </div>
-        </div>
-
-        <div class="player-slot" id="slot-p2">
-          <div class="slot-top">
-            <span class="slot-tag p2">PLAYER 2</span>
-            <span class="slot-state" id="p2-state">NOT CONNECTED</span>
-          </div>
-          <div class="slot-name">
-            <span id="p2-name">Connect 2nd Xbox pad for Versus</span>
-            <button class="rumble-btn" id="btn-rumble-p2" type="button" disabled>Rumble</button>
-          </div>
-        </div>
-
-        <div class="slot-actions">
-          <button class="btn" id="btn-swap-players" type="button">Swap P1 ↔ P2</button>
-        </div>
-
-        <p class="tip-note">
-          Browsers wake gamepads on the first button press. Both the <strong>D-Pad</strong> and <strong>Left Stick</strong> work simultaneously for movement and quarter-circle specials.
-        </p>
-      </div>
-
-      <!-- Xbox Fighting Layout + Live Input Monitor -->
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title">6-Button Xbox Layout</div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);">LIVE MONITOR</span>
-        </div>
-
-        <div class="layout-switch">
-          <button class="layout-opt active" id="opt-modern" type="button">
-            <strong>Xbox 6-Button</strong>
-            <span>X·Y·RB / A·B·RT</span>
+        <div class="menu-list" id="menu-list">
+          <button class="menu-item selected" data-action="resume" type="button">
+            <span>Resume Fight</span><span class="val">B</span>
           </button>
-          <button class="layout-opt" id="opt-classic" type="button">
-            <strong>Classic SNES</strong>
-            <span>X·Y·LB / A·B·RB</span>
+          <button class="menu-item" data-action="fullscreen" type="button">
+            <span>Fullscreen</span><span class="val" id="val-fs">Enter</span>
+          </button>
+          <button class="menu-item" data-action="layout" type="button">
+            <span>Button Layout</span><span class="val" id="val-layout">Xbox 6-Button</span>
+          </button>
+          <button class="menu-item" data-action="crt" type="button">
+            <span>CRT Scanlines</span><span class="val" id="val-crt">On</span>
+          </button>
+          <button class="menu-item" data-action="mute" type="button">
+            <span>Sound</span><span class="val" id="val-mute">On</span>
+          </button>
+          <button class="menu-item" data-action="swap" type="button">
+            <span>Swap P1 ↔ P2</span><span class="val" id="val-swap">Normal</span>
+          </button>
+          <button class="menu-item" data-action="moves" type="button">
+            <span>Special Move List</span><span class="val">12 Fighters</span>
+          </button>
+          <button class="menu-item" data-action="reset" type="button">
+            <span>Reset Game</span><span class="val">Restart</span>
           </button>
         </div>
 
-        <div class="dpad-row">
-          <span class="chip" id="hud-UP">UP</span>
-          <span class="chip" id="hud-DOWN">DOWN</span>
-          <span class="chip" id="hud-LEFT">LEFT</span>
-          <span class="chip" id="hud-RIGHT">RIGHT</span>
+        <div id="moves-view">
+          <div class="moves-scroll" id="moves-scroll"></div>
         </div>
 
-        <div class="six-grid" id="hud-six-grid">
-          <div class="pad-btn punch" id="hud-Y"><span class="xbox-cap" id="cap-Y">X</span><span class="move-cap">Light Punch</span></div>
-          <div class="pad-btn punch" id="hud-X"><span class="xbox-cap" id="cap-X">Y</span><span class="move-cap">Med Punch</span></div>
-          <div class="pad-btn punch" id="hud-L"><span class="xbox-cap" id="cap-L">RB</span><span class="move-cap">Heavy Punch</span></div>
-          <div class="pad-btn kick" id="hud-B"><span class="xbox-cap" id="cap-B">A</span><span class="move-cap">Light Kick</span></div>
-          <div class="pad-btn kick" id="hud-A"><span class="xbox-cap" id="cap-A">B</span><span class="move-cap">Med Kick</span></div>
-          <div class="pad-btn kick" id="hud-R"><span class="xbox-cap" id="cap-R">RT</span><span class="move-cap">Heavy Kick</span></div>
-        </div>
-
-        <div class="dpad-row" style="margin-bottom:0;">
-          <span class="chip" id="hud-SELECT">VIEW · SELECT</span>
-          <span class="chip" id="hud-START">MENU · START</span>
-        </div>
-
-        <div class="deadzone-row">
-          <span>Stick Deadzone</span>
-          <input id="deadzone-slider" type="range" min="0.15" max="0.60" step="0.02" value="0.32">
-          <span id="deadzone-val">0.32</span>
+        <div class="menu-footer">
+          <span>D-Pad / Stick: Navigate</span>
+          <span>A: Select · B: Back</span>
         </div>
       </div>
-
-      <!-- Keyboard Fallback -->
-      <div class="panel">
-        <div class="panel-head">
-          <div class="panel-title">Keyboard Fallback (P1)</div>
-        </div>
-        <div class="kb-list">
-          <div><strong>Move:</strong> Arrow Keys</div>
-          <div><strong>Punches:</strong> A (Light) · S (Med) · Q (Heavy)</div>
-          <div><strong>Kicks:</strong> Z (Light) · X (Med) · E (Heavy)</div>
-          <div><strong>System:</strong> Enter (Start) · V (Select)</div>
-        </div>
-      </div>
-    </aside>
-  </main>
+    </div>
+  </div>
 
   <script src="xbox-controller.js"></script>
   <script>
-    // Full 12-fighter Street Fighter II Turbo move list
+    // Full 12-Fighter Move List for Quick Menu
     const FIGHTERS = [
-      { name: 'RYU', origin: 'JAPAN', group: 'classics', moves: [
-        ['Hadouken', '↓ ↘ → + Punch'],
-        ['Shoryuken', '→ ↓ ↘ + Punch'],
-        ['Tatsumaki (Air OK)', '↓ ↙ ← + Kick']
-      ]},
-      { name: 'KEN', origin: 'USA', group: 'classics', moves: [
-        ['Hadouken', '↓ ↘ → + Punch'],
-        ['Shoryuken', '→ ↓ ↘ + Punch'],
-        ['Tatsumaki (Air OK)', '↓ ↙ ← + Kick']
-      ]},
-      { name: 'CHUN-LI', origin: 'CHINA', group: 'classics', moves: [
-        ['Kikoken (Turbo)', '← [hold] → + Punch'],
-        ['Lightning Legs', 'Tap Kick Rapidly'],
-        ['Spinning Bird Kick', '↓ [hold] ↑ + Kick']
-      ]},
-      { name: 'GUILE', origin: 'USA', group: 'classics', moves: [
-        ['Sonic Boom', '← [hold] → + Punch'],
-        ['Flash Kick', '↓ [hold] ↑ + Kick']
-      ]},
-      { name: 'BLANKA', origin: 'BRAZIL', group: 'classics', moves: [
-        ['Electric Thunder', 'Tap Punch Rapidly'],
-        ['Rolling Attack', '← [hold] → + Punch'],
-        ['Vertical Roll', '↓ [hold] ↑ + Kick']
-      ]},
-      { name: 'E. HONDA', origin: 'JAPAN', group: 'classics', moves: [
-        ['Hundred Hand Slap', 'Tap Punch Rapidly'],
-        ['Sumo Headbutt', '← [hold] → + Punch'],
-        ['Sumo Smash (Turbo)', '↓ [hold] ↑ + Kick']
-      ]},
-      { name: 'ZANGIEF', origin: 'USSR', group: 'classics', moves: [
-        ['Spinning Piledriver', '360° + Punch'],
-        ['Double Lariat', 'All 3 Punches / Kicks'],
-        ['Turbo Lariat', 'LP + MP or LK + MK']
-      ]},
-      { name: 'DHALSIM', origin: 'INDIA', group: 'classics', moves: [
-        ['Yoga Fire', '↓ ↘ → + Punch'],
-        ['Yoga Flame', '← ↙ ↓ ↘ → + Punch'],
-        ['Yoga Teleport', '→ ↓ ↘ or ← ↓ ↙ + 3P/3K']
-      ]},
-      { name: 'BALROG', origin: 'USA', group: 'bosses', moves: [
-        ['Dash Straight', '← [hold] → + Punch'],
-        ['Dash Upper', '← [hold] → + Kick'],
-        ['Turn Punch', 'Hold 3P or 3K, Release']
-      ]},
-      { name: 'VEGA', origin: 'SPAIN', group: 'bosses', moves: [
-        ['Rolling Crystal Flash', '← [hold] → + Punch'],
-        ['Flying Barcelona', '↓ [hold] ↑ + Kick, then P'],
-        ['Backflip', '3P (Long) / 3K (Short)']
-      ]},
-      { name: 'SAGAT', origin: 'THAILAND', group: 'bosses', moves: [
-        ['High Tiger Shot', '↓ ↘ → + Punch'],
-        ['Low Tiger Shot', '↓ ↘ → + Kick'],
-        ['Tiger Uppercut', '→ ↓ ↘ + Punch'],
-        ['Tiger Knee', '↓ ↘ → ↗ + Kick']
-      ]},
-      { name: 'M. BISON', origin: 'SHADALOO', group: 'bosses', moves: [
-        ['Psycho Crusher', '← [hold] → + Punch'],
-        ['Double Knee Press', '← [hold] → + Kick'],
-        ['Head Press', '↓ [hold] ↑ + Kick']
-      ]}
+      ['RYU & KEN', [['Hadouken', '↓ ↘ → + P'], ['Shoryuken', '→ ↓ ↘ + P'], ['Hurricane Kick', '↓ ↙ ← + K']]],
+      ['CHUN-LI', [['Kikoken', '← [hold] → + P'], ['Lightning Legs', 'Tap Kick'], ['Spinning Bird', '↓ [hold] ↑ + K']]],
+      ['GUILE', [['Sonic Boom', '← [hold] → + P'], ['Flash Kick', '↓ [hold] ↑ + K']]],
+      ['BLANKA', [['Electric Thunder', 'Tap Punch'], ['Rolling Attack', '← [hold] → + P'], ['Vertical Roll', '↓ [hold] ↑ + K']]],
+      ['E. HONDA', [['Hundred Hand', 'Tap Punch'], ['Sumo Headbutt', '← [hold] → + P'], ['Sumo Smash', '↓ [hold] ↑ + K']]],
+      ['ZANGIEF', [['Spinning Piledriver', '360° + P'], ['Double Lariat', '3P or 3K']]],
+      ['DHALSIM', [['Yoga Fire', '↓ ↘ → + P'], ['Yoga Flame', '← ↙ ↓ ↘ → + P'], ['Yoga Teleport', '→ ↓ ↘ + 3P/3K']]],
+      ['BALROG', [['Dash Straight', '← [hold] → + P'], ['Dash Upper', '← [hold] → + K'], ['Turn Punch', 'Hold 3P/3K']]],
+      ['VEGA', [['Rolling Flash', '← [hold] → + P'], ['Barcelona', '↓ [hold] ↑ + K, P']]],
+      ['SAGAT', [['Tiger Shot', '↓ ↘ → + P/K'], ['Tiger Uppercut', '→ ↓ ↘ + P'], ['Tiger Knee', '↓ ↘ → ↗ + K']]],
+      ['M. BISON', [['Psycho Crusher', '← [hold] → + P'], ['Knee Press', '← [hold] → + K'], ['Head Press', '↓ [hold] ↑ + K']]]
     ];
 
-    function renderMoves(filter = 'all') {
-      const grid = document.getElementById('moves-grid');
-      const list = filter === 'all' ? FIGHTERS : FIGHTERS.filter(f => f.group === filter);
-      grid.innerHTML = list.map(f => `
-        <div class="fighter-card">
-          <div class="fighter-head">
-            <span class="fighter-name">${f.name}</span>
-            <span class="fighter-origin">${f.origin}</span>
-          </div>
-          ${f.moves.map(([label, cmd]) => `
-            <div class="move-row">
-              <span class="move-name">${label}</span>
-              <span class="move-cmd">${cmd}</span>
-            </div>
-          `).join('')}
-        </div>
-      `).join('');
-    }
-    renderMoves('all');
+    document.getElementById('moves-scroll').innerHTML = FIGHTERS.map(([name, moves]) => `
+      <div class="mv-card">
+        <div class="mv-name">${name}</div>
+        ${moves.map(([m, c]) => `<div class="mv-row"><span>${m}</span><span class="mv-cmd">${c}</span></div>`).join('')}
+      </div>
+    `).join('');
 
-    document.getElementById('roster-tabs').addEventListener('click', (e) => {
-      const btn = e.target.closest('.tab-btn');
-      if (!btn) return;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderMoves(btn.dataset.filter);
-    });
-
-    // EmulatorJS configuration (relative paths so it works both locally and on GitHub Pages)
+    // EmulatorJS Configuration (clean full-bleed Snes9x, no PC toolbar)
     window.EJS_player = '#game';
     window.EJS_core = 'snes';
-    window.EJS_gameName = 'Street Fighter II Turbo: Hyper Fighting';
+    window.EJS_gameName = 'Street Fighter II Turbo';
     window.EJS_gameUrl = 'roms/StreetFighter2Turbo.sfc';
     window.EJS_pathtodata = 'vendor/emulatorjs/data/';
     window.EJS_startOnLoaded = true;
     window.EJS_DEBUG_XX = true;
     window.EJS_disableDatabases = true;
     window.EJS_backgroundColor = '#000000';
+    window.EJS_Buttons = {
+      playPause: false, restart: false, mute: false, settings: false,
+      fullscreen: false, saveState: false, loadState: false, screenRecord: false,
+      gamepad: false, cheat: false, volume: false, saveSavFiles: false,
+      loadSavFiles: false, quickSave: false, quickLoad: false, screenshot: false,
+      cacheManager: false, exitEmulation: false
+    };
     window.EJS_defaultOptions = {
       'snes9x_aspect': '4:3',
       'snes9x_region': 'Auto'
@@ -924,102 +538,205 @@
     emuScript.src = 'vendor/emulatorjs/data/loader.js';
     document.body.appendChild(emuScript);
 
-    // Initialize Dual Xbox Controller Engine
+    // State
+    const rootEl = document.getElementById('arcade-root');
+    const splashEl = document.getElementById('splash');
+    const menuEl = document.getElementById('quick-menu');
+    const menuListEl = document.getElementById('menu-list');
+    const movesViewEl = document.getElementById('moves-view');
+    const movesScrollEl = document.getElementById('moves-scroll');
+    const hudFloatEl = document.getElementById('hud-float');
+    const crtEl = document.getElementById('crt-overlay');
+
+    let menuItems = Array.from(menuListEl.querySelectorAll('.menu-item'));
+    let selectedIndex = 0;
+    let inMovesView = false;
+    let isMuted = false;
+    let hudTimer = null;
+
+    function showHudTemporarily() {
+      hudFloatEl.classList.remove('faded');
+      clearTimeout(hudTimer);
+      hudTimer = setTimeout(() => {
+        if (!menuEl.classList.contains('open') && splashEl.classList.contains('hidden')) {
+          hudFloatEl.classList.add('faded');
+        }
+      }, 3500);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        (rootEl.requestFullscreen || document.documentElement.requestFullscreen).call(rootEl).catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+      updateMenuValues();
+    }
+
+    function updateMenuValues() {
+      document.getElementById('val-fs').textContent = document.fullscreenElement ? 'Exit' : 'Enter';
+      document.getElementById('val-layout').textContent = xbox.getLayout().name;
+      document.getElementById('val-crt').textContent = crtEl.classList.contains('disabled') ? 'Off' : 'On';
+      document.getElementById('val-mute').textContent = isMuted ? 'Muted' : 'On';
+      document.getElementById('val-swap').textContent = xbox.swapped ? 'Swapped' : 'Normal';
+    }
+
+    function setSelected(idx) {
+      selectedIndex = (idx + menuItems.length) % menuItems.length;
+      menuItems.forEach((el, i) => el.classList.toggle('selected', i === selectedIndex));
+      menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    function openMenu() {
+      inMovesView = false;
+      menuListEl.style.display = 'flex';
+      movesViewEl.classList.remove('active');
+      document.getElementById('menu-title').textContent = 'ARCADE MENU';
+      updateMenuValues();
+      setSelected(0);
+      menuEl.classList.add('open');
+      hudFloatEl.classList.remove('faded');
+      xbox.setMenuOpen(true);
+    }
+
+    function closeMenu() {
+      inMovesView = false;
+      menuEl.classList.remove('open');
+      xbox.setMenuOpen(false);
+      showHudTemporarily();
+    }
+
+    function toggleMenu() {
+      if (!splashEl.classList.contains('hidden')) return;
+      if (menuEl.classList.contains('open')) closeMenu();
+      else openMenu();
+    }
+
+    function runMenuAction(action) {
+      if (action === 'resume') {
+        closeMenu();
+      } else if (action === 'fullscreen') {
+        toggleFullscreen();
+      } else if (action === 'layout') {
+        xbox.toggleLayout();
+        updateMenuValues();
+      } else if (action === 'crt') {
+        crtEl.classList.toggle('disabled');
+        updateMenuValues();
+      } else if (action === 'mute') {
+        isMuted = !isMuted;
+        if (window.EJS_emulator && typeof window.EJS_emulator.setVolume === 'function') {
+          window.EJS_emulator.setVolume(isMuted ? 0 : 1);
+        }
+        updateMenuValues();
+      } else if (action === 'swap') {
+        xbox.swapPlayers();
+        updateMenuValues();
+      } else if (action === 'moves') {
+        inMovesView = true;
+        menuListEl.style.display = 'none';
+        movesViewEl.classList.add('active');
+        document.getElementById('menu-title').textContent = 'SPECIAL MOVES (B: BACK)';
+        movesScrollEl.scrollTop = 0;
+      } else if (action === 'reset') {
+        if (window.EJS_emulator && window.EJS_emulator.gameManager && typeof window.EJS_emulator.gameManager.restart === 'function') {
+          window.EJS_emulator.gameManager.restart();
+          closeMenu();
+        } else {
+          window.location.reload();
+        }
+      }
+    }
+
+    function startPlaying(fromUserGesture) {
+      if (splashEl.classList.contains('hidden')) return;
+      splashEl.classList.add('hidden');
+      xbox.setSplashActive(false);
+
+      if (window.EJS_emulator && window.EJS_emulator.audioContext && window.EJS_emulator.audioContext.state === 'suspended') {
+        window.EJS_emulator.audioContext.resume().catch(() => {});
+      }
+      // Attempt native fullscreen on click/key user gesture (fails silently if browser blocks non-gesture fullscreen)
+      if (fromUserGesture && !document.fullscreenElement) {
+        (rootEl.requestFullscreen || document.documentElement.requestFullscreen).call(rootEl).catch(() => {});
+      }
+      showHudTemporarily();
+    }
+
+    // Initialize Xbox Arcade Controller
     const xbox = new XboxArcadeController({
       onStatusChange(status) {
         const [p1, p2] = status.players;
         const count = (p1.connected ? 1 : 0) + (p2.connected ? 1 : 0);
+        const label = count === 2
+          ? `1P ${p1.name} · 2P ${p2.name}`
+          : (count === 1 ? `1P ${p1.name} Connected` : 'Press any button on Xbox pad');
 
-        const pill = document.getElementById('header-xbox-pill');
-        const pillText = document.getElementById('header-xbox-text');
-        pill.classList.toggle('online', count > 0);
-        pillText.textContent = count === 0
-          ? 'XBOX: PRESS ANY BUTTON'
-          : (count === 1 ? 'XBOX: 1P CONNECTED' : 'XBOX: 1P + 2P VERSUS');
-
-        document.getElementById('tele-players').textContent =
-          count === 2 ? '2P VERSUS (XBOX ×2)' : (count === 1 ? '1P XBOX READY' : 'KEYBOARD / XBOX READY');
-
-        // P1 card
-        document.getElementById('slot-p1').classList.toggle('connected', p1.connected);
-        document.getElementById('p1-state').textContent = p1.connected ? 'CONNECTED' : 'WAITING…';
-        document.getElementById('p1-name').textContent = p1.connected ? p1.name : 'Press any button on Xbox pad';
-        document.getElementById('btn-rumble-p1').disabled = !p1.connected;
-
-        // P2 card
-        document.getElementById('slot-p2').classList.toggle('connected', p2.connected);
-        document.getElementById('p2-state').textContent = p2.connected ? 'CONNECTED' : 'NOT CONNECTED';
-        document.getElementById('p2-name').textContent = p2.connected ? p2.name : 'Connect 2nd Xbox pad for Versus';
-        document.getElementById('btn-rumble-p2').disabled = !p2.connected;
-
-        // Layout buttons & caps
-        document.getElementById('opt-modern').classList.toggle('active', status.layoutKey === 'modern');
-        document.getElementById('opt-classic').classList.toggle('active', status.layoutKey === 'classic');
-        document.getElementById('tele-layout').textContent = status.layout.name.toUpperCase();
-
-        for (const [key, info] of Object.entries(status.layout.labels)) {
-          const cap = document.getElementById('cap-' + key);
-          if (cap) cap.textContent = info.xbox;
-        }
+        document.getElementById('hud-pad-pill').classList.toggle('online', count > 0);
+        document.getElementById('hud-pad-text').textContent = label;
+        document.getElementById('splash-pad-status').classList.toggle('online', count > 0);
+        document.getElementById('splash-pad-text').textContent = label;
+        document.getElementById('menu-pad-info').textContent = count > 0 ? label : 'Keyboard / Xbox';
+        updateMenuValues();
+        if (count > 0 && splashEl.classList.contains('hidden')) showHudTemporarily();
       },
-      onInputVisual(playerSlot, snesBtn, isDown) {
-        const el = document.getElementById('hud-' + snesBtn);
-        if (!el) return;
-        const cls = playerSlot === 0 ? 'lit-p1' : 'lit-p2';
-        el.classList.toggle(cls, isDown);
+      onMenuToggle() {
+        toggleMenu();
+      },
+      onMenuNav(cmd) {
+        if (inMovesView) {
+          if (cmd === 'UP') movesScrollEl.scrollBy({ top: -110, behavior: 'smooth' });
+          else if (cmd === 'DOWN') movesScrollEl.scrollBy({ top: 110, behavior: 'smooth' });
+          else if (cmd === 'BACK') {
+            inMovesView = false;
+            movesViewEl.classList.remove('active');
+            menuListEl.style.display = 'flex';
+            document.getElementById('menu-title').textContent = 'ARCADE MENU';
+          }
+          return;
+        }
+        if (cmd === 'UP') setSelected(selectedIndex - 1);
+        else if (cmd === 'DOWN') setSelected(selectedIndex + 1);
+        else if (cmd === 'CONFIRM') runMenuAction(menuItems[selectedIndex].dataset.action);
+        else if (cmd === 'BACK') closeMenu();
+      },
+      onSplashConfirm() {
+        startPlaying(false);
       }
     });
 
+    xbox.setSplashActive(true);
     xbox.start();
 
-    // UI Controls
-    document.getElementById('opt-modern').addEventListener('click', () => xbox.setLayout('modern'));
-    document.getElementById('opt-classic').addEventListener('click', () => xbox.setLayout('classic'));
-    document.getElementById('btn-swap-players').addEventListener('click', () => xbox.swapPlayers());
-    document.getElementById('btn-rumble-p1').addEventListener('click', () => xbox.rumble(0));
-    document.getElementById('btn-rumble-p2').addEventListener('click', () => xbox.rumble(1));
-
-    const dzSlider = document.getElementById('deadzone-slider');
-    const dzVal = document.getElementById('deadzone-val');
-    dzSlider.value = String(xbox.deadzone);
-    dzVal.textContent = xbox.deadzone.toFixed(2);
-    dzSlider.addEventListener('input', () => {
-      const v = parseFloat(dzSlider.value);
-      dzVal.textContent = v.toFixed(2);
-      xbox.setDeadzone(v);
+    // Mouse / Keyboard bindings
+    document.getElementById('btn-start-play').addEventListener('click', () => startPlaying(true));
+    document.getElementById('btn-hud-fs').addEventListener('click', toggleFullscreen);
+    document.getElementById('btn-hud-menu').addEventListener('click', toggleMenu);
+    menuItems.forEach((btn, i) => {
+      btn.addEventListener('mouseenter', () => setSelected(i));
+      btn.addEventListener('click', () => runMenuAction(btn.dataset.action));
     });
 
-    // CRT & Fullscreen toggles
-    const crtBtn = document.getElementById('btn-crt');
-    const crtOverlay = document.getElementById('crt-overlay');
-    crtBtn.addEventListener('click', () => {
-      crtOverlay.classList.toggle('disabled');
-      crtBtn.classList.toggle('active', !crtOverlay.classList.contains('disabled'));
+    document.addEventListener('mousemove', () => {
+      if (splashEl.classList.contains('hidden')) showHudTemporarily();
     });
+    document.addEventListener('fullscreenchange', updateMenuValues);
 
-    const fsBtn = document.getElementById('btn-fullscreen');
-    const viewportBox = document.getElementById('viewport-box');
-    fsBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        viewportBox.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
-    });
-
-    // Keyboard visual mirror on HUD
-    const KB_HUD = {
-      ArrowUp: 'UP', ArrowDown: 'DOWN', ArrowLeft: 'LEFT', ArrowRight: 'RIGHT',
-      a: 'Y', s: 'X', q: 'L', z: 'B', x: 'A', e: 'R',
-      Enter: 'START', v: 'SELECT'
-    };
     window.addEventListener('keydown', (e) => {
-      const btn = KB_HUD[e.key] || KB_HUD[e.key.toLowerCase()];
-      if (btn) document.getElementById('hud-' + btn)?.classList.add('lit-p1');
-    });
-    window.addEventListener('keyup', (e) => {
-      const btn = KB_HUD[e.key] || KB_HUD[e.key.toLowerCase()];
-      if (btn) document.getElementById('hud-' + btn)?.classList.remove('lit-p1');
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        toggleMenu();
+      } else if (!splashEl.classList.contains('hidden') && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        startPlaying(true);
+      } else if (menuEl.classList.contains('open')) {
+        if (e.key === 'ArrowUp') { e.preventDefault(); xbox.onMenuNav('UP'); }
+        else if (e.key === 'ArrowDown') { e.preventDefault(); xbox.onMenuNav('DOWN'); }
+        else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); xbox.onMenuNav('CONFIRM'); }
+        else if (e.key === 'Backspace') { e.preventDefault(); xbox.onMenuNav('BACK'); }
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
     });
   </script>
 </body>
